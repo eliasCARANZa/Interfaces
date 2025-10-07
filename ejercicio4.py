@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from PIL import Image, ImageOps, ImageFilter
 import os, tempfile
 
@@ -103,3 +104,91 @@ if __name__ == "__main__":
         edge_blur=6,
         out_path=os.path.join(RES, "e4_02.png")
     )
+=======
+import os
+from PIL import Image, ImageOps, ImageFilter, ImageDraw
+import numpy as np
+import matplotlib.pyplot as plt
+
+IMG_DIR = "Imagenes"
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+IMG_PATH = os.path.join(BASE_PATH, IMG_DIR)
+
+rutas = {
+    'fig_00': os.path.join(IMG_PATH, "fig_00.jpg"),
+    'fig_01': os.path.join(IMG_PATH, "fig_01.jpg"),
+    'fig_02': os.path.join(IMG_PATH, "fig_02.jpg"),
+    'fig_03': os.path.join(IMG_PATH, "fig_03.jpg"),
+    'fig_04': os.path.join(IMG_PATH, "fig_04.jpg")
+}
+
+Shape = ["circle", "rounded_rect", "pentagon", "heart"]
+fondo_keys = ["fig_01", "fig_02", "fig_03", "fig_04"]
+
+def create_mask(shape, size, radius=30):
+    w, h = size
+    mask = Image.new("L", (w, h), 0)
+    draw = ImageDraw.Draw(mask)
+    if shape == "circle":
+        m = min(w, h) - 2
+        draw.ellipse(((w - m)//2, (h - m)//2, (w + m)//2, (h + m)//2), fill=255)
+    elif shape == "rounded_rect":
+        draw.rounded_rectangle((5, 5, w - 5, h - 5), radius=radius, fill=255)
+    elif shape == "pentagon":
+        cx, cy = w / 2, h / 2
+        r = 0.42 * min(w, h)
+        pts = [(cx + r*np.cos(np.deg2rad(90 + 72*i)),
+                cy - r*np.sin(np.deg2rad(90 + 72*i))) for i in range(5)]
+        draw.polygon(pts, fill=255)
+    elif shape == "heart":
+        heart = Image.new("L", (w, h), 0)
+        d = ImageDraw.Draw(heart)
+        bw = int(0.7 * w); bh = int(0.7 * h)
+        x0 = (w - bw)//2; y0 = (h - bh)//2
+        r = bw//4
+        d.ellipse((x0, y0, x0 + 2*r, y0 + 2*r), fill=255)
+        d.ellipse((x0 + r, y0, x0 + 3*r, y0 + 2*r), fill=255)
+        d.polygon([(x0 - 6, y0 + r),
+                   (x0 + bw + 6, y0 + r),
+                   (x0 + bw//2, y0 + bh)], fill=255)
+        mask = heart
+    return mask
+
+def composite_with_template(bg_path, fg_path, shape, rel_size=0.45, edge_blur=6):
+    bg = Image.open(bg_path).convert("RGB")
+    fg = Image.open(fg_path).convert("RGB")
+    W, H = bg.size
+    box_w = int(W * rel_size)
+    box_h = int(box_w * fg.height / fg.width)
+    mask = create_mask(shape, (box_w, box_h))
+    if edge_blur > 0:
+        mask = mask.filter(ImageFilter.GaussianBlur(edge_blur))
+    fg_fit = ImageOps.fit(fg, (box_w, box_h))
+    fg_rgba = fg_fit.copy()
+    fg_rgba.putalpha(mask)
+    x = (W - box_w)//2
+    y = (H - box_h)//2
+    composed = bg.copy()
+    composed.paste(fg_rgba, (x, y), fg_rgba)
+    return composed
+
+def mostrar_procesadas(rutas, subject_img_key):
+    fig, axes = plt.subplots(1, 4, figsize=(12, 4))
+    fg_path = rutas[subject_img_key]
+    for i, shape in enumerate(Shape):
+        bg_path = rutas[fondo_keys[i]]
+        img = composite_with_template(
+            bg_path, fg_path,
+            shape=shape,
+            rel_size=0.50 if shape != "circle" else 0.45,
+            edge_blur=6
+        )
+        axes[i].imshow(np.array(img))
+        axes[i].set_title(f"Procesada {i+1}")
+        axes[i].axis('off')
+    plt.tight_layout()
+    plt.show()
+
+# Ejecución principal
+mostrar_procesadas(rutas, 'fig_00')
+>>>>>>> Stashed changes
