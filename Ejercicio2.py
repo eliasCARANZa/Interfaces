@@ -39,12 +39,9 @@ def plot_histogram_pil(image_path: str, title: str = "Histograma RGB", save_path
         plt.show()
 
 
-# =========================
-# Ejemplo de ejecución
-# =========================
 if __name__ == "__main__":
     # Ruta relativa a la imagen dentro de la carpeta del proyecto
-    ruta_imagen = "Proyecto 1/Imagenes/mono.png"
+    ruta_imagen = "Imagenes/mono.png"
 
     # Mostrar en pantalla el histograma
     plot_histogram_pil(ruta_imagen, title="Histograma RGB - Imagen (mono)")

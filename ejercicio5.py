@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-# Ejercicio 5: separar planos R, G, B y calcular el "área ocupada" por canal.
-# Requisitos: pip install pillow matplotlib numpy
 
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Tuple
 
-def split_rgb_and_area(image_path: str, threshold: int = 0) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def split_rgb_and_area(image_path: str, threshold: int = 0):
     """
     Separa los planos R, G y B de 'image_path' y calcula el área ocupada de cada canal,
     definida como el número de píxeles con intensidad > threshold.
@@ -53,9 +49,4 @@ def split_rgb_and_area(image_path: str, threshold: int = 0) -> Tuple[np.ndarray,
     plt.tight_layout()
     plt.show()
 
-
-
-
-
-# =========================#
-split_rgb_and_area("Proyecto 1/Imagenes/fig_05.jpg", threshold=10)
+split_rgb_and_area("Imagenes/fig_05.jpg", threshold=10)

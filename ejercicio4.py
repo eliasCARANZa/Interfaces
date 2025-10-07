@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-# Ejercicio 4 (parte 1): fig_01 + pla_01 (círculo) y fig_02 + pla_02 (rectángulo redondeado)
-# Lee desde: Proyecto 1/Imagenes
-# Guarda preferentemente en: Proyecto 1/Imagenes/Resultados
-# Si no puede crear esa carpeta, guarda en Proyecto 1/Imagenes
-# Si tampoco puede, guarda en %TEMP%
-
 from PIL import Image, ImageOps, ImageFilter
 import os, tempfile
 

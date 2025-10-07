@@ -1,8 +1,3 @@
-# ...existing code...
-# -*- coding: utf-8 -*-
-# Ejercicio 6: Histograma RGB + conversión a gris e histograma
-# Imagen: Proyecto 1/Imagenes/fig_00.jpg
-
 from PIL import Image, ImageOps
 import matplotlib.pyplot as plt
 import numpy as np
